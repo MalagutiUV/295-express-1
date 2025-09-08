@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import fs from "fs";
 import db from "./db.js";
+import { UsersService } from "./services/user.service.js";
 
 const app = express();
 
@@ -72,8 +73,8 @@ app.post("/song", async (req, res) => {
 
 //users
 app.get("/users", async (req, res) => {
-  const [result] = await db.query("SELECT * FROM users");
-  res.send(result);
+  const users = await UsersService.getAll();
+  res.send(users);
 });
 
 app.post("/users", async (req, res) => {
@@ -85,24 +86,17 @@ app.post("/users", async (req, res) => {
     });
   }
 
-  const [conflict] = await db.query(
-    "SELECT * FROM users WHERE username = ? OR email = ?",
-    [username, email]
-  );
-
-  console.log(conflict);
-
-  if (conflict[0]) {
-    return res.status(409).send({
-      message: "username or email already in use",
+  try {
+    const [result] = await db.query(
+      "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
+      [username, password, email]
+    );
+    res.status(201).send({ message: "User Created" });
+  } catch (error) {
+    res.status(400).send({
+      error: error.message,
     });
   }
-
-  const [result] = await db.query(
-    "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
-    [username, password, email]
-  );
-  res.status(201).send({ message: "User Created" });
 });
 
 export default app;
