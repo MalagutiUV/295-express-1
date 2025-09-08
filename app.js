@@ -77,6 +77,18 @@ app.get("/users", async (req, res) => {
   res.send(users);
 });
 
+app.get("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await UsersService.get(id);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(404).send({
+      error: "User with the id not found",
+    });
+  }
+});
+
 app.post("/users", async (req, res) => {
   const { username, password, email } = req.body;
 
