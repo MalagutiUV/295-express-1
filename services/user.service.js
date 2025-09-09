@@ -16,6 +16,17 @@ export const UsersService = {
     return result;
   },
 
+  async getByEmail(email) {
+    const [result] = await db.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+
+    if (result.length !== 1) {
+      throw new Error("User not found");
+    }
+    return result;
+  },
+
   async insertOne(username, password, email) {
     const password_hashed = await hash(password);
 

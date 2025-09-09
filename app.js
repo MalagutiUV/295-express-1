@@ -3,7 +3,8 @@ import morgan from "morgan";
 import fs from "fs";
 import { UsersService } from "./services/user.service.js";
 import { SongService } from "./services/song.service.js";
-
+import jwt from "jsonwebtoken";
+import env from "./config.js";
 const app = express();
 
 app.use(express.json());
@@ -142,8 +143,20 @@ app.post("/auth/login", async (req, res) => {
     });
   }
 
+  const user = await UsersService.getByEmail(email);
+
+  // todo sign a token!!!
+
+  const payload = {
+    sub: user.id,
+    email: email,
+  };
+
+  const token = jwt.sign(payload, env.token.secret);
+
   res.status(200).send({
     ok: true,
+    token: token,
   });
 });
 
