@@ -3,6 +3,7 @@ import morgan from "morgan";
 import fs from "fs";
 import db from "./db.js";
 import { UsersService } from "./services/user.service.js";
+import { SongService } from "./services/song.service.js";
 
 const app = express();
 
@@ -45,10 +46,10 @@ app.get("/version", (req, res) => {
   });
 });
 
-//songs
+// Song Routes
 app.get("/song", async (req, res) => {
-  const [result] = await db.query("SELECT * FROM songs");
-  res.send(result);
+  const songs = await SongService.getAll();
+  res.send(songs);
 });
 
 app.post("/song", async (req, res) => {
@@ -60,18 +61,15 @@ app.post("/song", async (req, res) => {
       .send({ message: "missing required fields: {title, artist}" });
   }
 
-  const [result] = await db.query(
-    "INSERT INTO songs (title, artist) VALUES (?, ?)",
-    [title, artist]
-  );
+  const insertedSong = SongService.insertOne(title, artist);
 
   res.status(201).send({
     id: result.insertId,
-    message: `Neuer Song ${title} von Artist: ${artist} wurde erstellt`,
+    message: `Neuer Song ${insertedSong.title} von Artist: ${insertedSong.artist} wurde erstellt`,
   });
 });
 
-//users
+// User Routes
 app.get("/users", async (req, res) => {
   const users = await UsersService.getAll();
   res.send(users);
@@ -99,11 +97,12 @@ app.post("/users", async (req, res) => {
   }
 
   try {
-    const [result] = await db.query(
-      "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
-      [username, password, email]
+    const insertedUser = await UsersService.insertOne(
+      username,
+      password,
+      email
     );
-    res.status(201).send({ message: "User Created" });
+    res.status(201).send({ message: `User ${insertedUser.username} created` });
   } catch (error) {
     res.status(400).send({
       error: error.message,

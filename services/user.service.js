@@ -13,4 +13,12 @@ export const UsersService = {
     }
     return result;
   },
+
+  async insertOne(username, password, email) {
+    const [result] = await db.query(
+      "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
+      [username, password, email]
+    );
+    return result;
+  },
 };
