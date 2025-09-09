@@ -134,7 +134,6 @@ app.post("/users", async (req, res) => {
 
 // Auth Routes
 app.post("/auth/register", async (req, res) => {
-  console.log("Auth Register Route");
   const { username, password, email } = req.body;
 
   if (!username || !password || !email) {
