@@ -1,5 +1,7 @@
 import db from "../db.js";
 
+import { compare, hash } from "../utils/auth.utils.js";
+
 export const UsersService = {
   async getAll() {
     const [result] = await db.query("SELECT * FROM users");
@@ -15,10 +17,28 @@ export const UsersService = {
   },
 
   async insertOne(username, password, email) {
+    const password_hashed = await hash(password);
+
     const [result] = await db.query(
-      "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
-      [username, password, email]
+      "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)",
+      [username, password_hashed, email]
     );
     return result;
+  },
+
+  async checkUser(email, password) {
+    // todo ask if user exist
+    const [result] = await db.query(
+      "SELECT email, password_hash FROM users WHERE email = ?",
+      [email]
+    );
+    if (result.length !== 1) {
+      throw new Error("User Credentials wrong");
+    }
+
+    const user = result[0];
+
+    const match = await compare(password, user.password_hash);
+    return match;
   },
 };

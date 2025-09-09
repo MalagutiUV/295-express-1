@@ -35,4 +35,4 @@ VALUES
     ('diana', 'letmein', 'diana@example.com'),
     ('eve', 'secret', 'eve@example.com');
 
-ALTER TABLE users ADD UNIQUE (email);
+ALTER TABLE users CHANGE COLUMN password password_hash VARCHAR(255) NOT NULL

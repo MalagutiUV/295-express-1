@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import fs from "fs";
-import db from "./db.js";
 import { UsersService } from "./services/user.service.js";
 import { SongService } from "./services/song.service.js";
 
@@ -108,6 +107,44 @@ app.post("/users", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+// Auth Routes
+app.post("/auth/register", async (req, res) => {
+  console.log("Auth Register Route");
+  const { username, password, email } = req.body;
+
+  if (!username || !password || !email) {
+    return res.status(400).send({
+      message: "Missing required fields: {username, password, email}",
+    });
+  }
+
+  const user = await UsersService.insertOne(username, password, email);
+
+  res.status(200).send({ ok: true });
+});
+
+app.post("/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({
+      message: "Missing required fields: {email, password}",
+    });
+  }
+
+  const userExist = await UsersService.checkUser(email, password);
+
+  if (!userExist) {
+    return res.status(429).send({
+      message: "User Credentials not correct",
+    });
+  }
+
+  res.status(200).send({
+    ok: true,
+  });
 });
 
 export default app;
