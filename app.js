@@ -48,8 +48,30 @@ app.get("/version", (req, res) => {
 
 // Song Routes
 app.get("/song", async (req, res) => {
-  const songs = await SongService.getAll();
-  res.send(songs);
+  const authorization = req.headers.authorization;
+
+  if (!authorization) {
+    res.status(429).send({
+      message: "Token not valid",
+    });
+  }
+  if (!authorization.startsWith("Bearer")) {
+    res.status(429).send({
+      message: "Token not valid",
+    });
+  }
+
+  const splitAuthorization = authorization.split(" ");
+  const extractedToken = splitAuthorization[1];
+  try {
+    const verifyToken = jwt.verify(extractedToken, env.token.secret);
+    const songs = await SongService.getAll();
+    res.send(songs);
+  } catch (error) {
+    res.status(429).send({
+      message: "Token not valid",
+    });
+  }
 });
 
 app.post("/song", async (req, res) => {
@@ -144,8 +166,6 @@ app.post("/auth/login", async (req, res) => {
   }
 
   const user = await UsersService.getByEmail(email);
-
-  // todo sign a token!!!
 
   const payload = {
     sub: user.id,
