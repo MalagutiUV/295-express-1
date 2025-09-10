@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -11,12 +11,12 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!PORT) {
   throw new Error(
-    "Define a Port in the .env File or in the Env Variables of your server"
+    'Define a Port in the .env File or in the Env Variables of your server',
   );
 }
 
 if (!JWT_SECRET) {
-  throw new Error("Define a jwt Secret");
+  throw new Error('Define a jwt Secret');
 }
 const env = {
   PORT: PORT,

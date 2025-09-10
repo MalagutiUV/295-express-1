@@ -1,4 +1,4 @@
-import { SongService } from "../services/song.service.js";
+import { SongService } from '../services/song.service.js';
 
 export const getSongs = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ export const getSongs = async (req, res) => {
     res.status(200).send(songs);
   } catch (error) {
     res.status(401).send({
-      message: "Token not valid",
+      message: 'Token not valid',
     });
   }
 };
@@ -19,7 +19,7 @@ export const getSongById = async (req, res) => {
     res.status(200).send(song);
   } catch (error) {
     res.status(401).send({
-      message: "Token not valid",
+      message: 'Token not valid',
     });
   }
 };
@@ -30,13 +30,13 @@ export const createSong = async (req, res) => {
   if (!title || !artist) {
     return res
       .status(400)
-      .send({ message: "missing required fields: {title, artist}" });
+      .send({ message: 'missing required fields: {title, artist}' });
   }
 
   try {
     const insertedSong = await SongService.insertOne(title, artist);
     res.status(201).send({
-      message: "song created",
+      message: 'song created',
       id: insertedSong.id,
     });
   } catch (error) {

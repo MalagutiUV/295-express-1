@@ -1,17 +1,17 @@
-import express from "express";
-import { requireAuth } from "../middleware/auth.middleware.js";
+import express from 'express';
+import { requireAuth } from '../middleware/auth.middleware.js';
 import {
   getSongs,
   getSongById,
   createSong,
-} from "../controller/song.controller.js";
+} from '../controller/song.controller.js';
 
 const songRouter = express.Router();
 
 songRouter.use(requireAuth);
 
-songRouter.get("/", getSongs);
-songRouter.get("/:id", getSongById);
-songRouter.post("/", createSong);
+songRouter.get('/', getSongs);
+songRouter.get('/:id', getSongById);
+songRouter.post('/', createSong);
 
 export default songRouter;

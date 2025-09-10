@@ -1,5 +1,5 @@
-import crypto from "crypto";
+import crypto from 'crypto';
 
-const secret = crypto.randomBytes(512).toString("hex");
+const secret = crypto.randomBytes(512).toString('hex');
 
 console.log(secret);

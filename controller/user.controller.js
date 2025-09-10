@@ -1,4 +1,4 @@
-import { UsersService } from "../services/user.service.js";
+import { UsersService } from '../services/user.service.js';
 
 export const getUsers = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ export const getUsers = async (req, res) => {
     res.status(200).send(users);
   } catch (error) {
     res.status(404).send({
-      error: "User with the id not found",
+      error: 'User with the id not found',
     });
   }
 };
@@ -18,7 +18,7 @@ export const getUserById = async (req, res) => {
     res.status(200).send(user);
   } catch (error) {
     res.status(404).send({
-      error: "User with the id not found",
+      error: 'User with the id not found',
     });
   }
 };
@@ -28,7 +28,7 @@ export const createUser = async (req, res) => {
 
   if (!username || !password || !email) {
     return res.status(400).send({
-      message: "Missing required fields: {username, password, email}",
+      message: 'Missing required fields: {username, password, email}',
     });
   }
 
@@ -36,7 +36,7 @@ export const createUser = async (req, res) => {
     const insertedUser = await UsersService.insertOne(
       username,
       password,
-      email
+      email,
     );
     res.status(201).send({ message: `User ${insertedUser.username} created` });
   } catch (error) {
