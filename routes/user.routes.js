@@ -1,3 +1,4 @@
+import express from "express";
 import {
   createUser,
   getUserById,
@@ -5,8 +6,12 @@ import {
 } from "../controller/user.controller";
 import { requireAuth } from "../middleware/auth.middleware";
 
-router.use(requireAuth);
+const userRouter = express.Router();
+
+userRouter.use(requireAuth);
 // User Routes
-router.get("/users", getUsers);
-router.get("/users/:id", getUserById);
-router.post("/users", createUser);
+userRouter.get("/", getUsers);
+userRouter.get("/:id", getUserById);
+userRouter.post("/", createUser);
+
+export default userRouter;

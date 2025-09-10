@@ -13,6 +13,7 @@ app.use(express.json());
 
 app.use("/song", songRouter);
 app.use("/auth", authRouter);
+app.use("/users", userr);
 
 app.use(morgan("tiny"));
 
@@ -21,10 +22,5 @@ const accessLogStream = fs.createWriteStream("./access.log", {
 });
 
 app.use(morgan("combined", { stream: accessLogStream }));
-
-// User Routes
-app.get("/users", requireAuth, async (req, res) => {});
-app.get("/users/:id", requireAuth, async (req, res) => {});
-app.post("/users", requireAuth, async (req, res) => {});
 
 export default app;
