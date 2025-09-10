@@ -1,5 +1,6 @@
 import { UsersService } from "../services/user.service.js";
 import jwt from "jsonwebtoken";
+import env from "../config.js";
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
