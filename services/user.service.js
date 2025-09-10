@@ -10,6 +10,7 @@ export const UsersService = {
 
   async get(id) {
     const [result] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+
     if (result.length !== 1) {
       throw new Error('User not found');
     }
