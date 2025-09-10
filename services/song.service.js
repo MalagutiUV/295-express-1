@@ -2,7 +2,8 @@ import db from '../config/db.js';
 
 export const SongService = {
   async getAll() {
-    const [result] = await db.query('SELECT * FROM songs');
+    const [result] = await db.query('SELECT id, title, artist FROM songs');
+
     return result;
   },
 
