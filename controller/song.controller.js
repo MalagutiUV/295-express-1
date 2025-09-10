@@ -37,6 +37,7 @@ export const createSong = async (req, res) => {
     const insertedSong = await SongService.insertOne(title, artist);
     res.status(201).send({
       message: "song created",
+      id: insertedSong.id,
     });
   } catch (error) {
     res.status(500).send({ error: true });
