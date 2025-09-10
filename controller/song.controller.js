@@ -15,7 +15,7 @@ export const getSongs = async (req, res) => {
 export const getSongById = async (req, res) => {
   try {
     const { id } = req.params;
-    const song = await getSongById(id);
+    const song = await SongService.getById(id);
     res.status(200).send(song);
   } catch (error) {
     res.status(401).send({
@@ -39,9 +39,6 @@ export const createSong = async (req, res) => {
       message: "song created",
     });
   } catch (error) {
-    res.status(201).send({
-      id: result.insertId,
-      message: `Neuer Song ${insertedSong.title} von Artist: ${insertedSong.artist} wurde erstellt`,
-    });
+    res.status(500).send({ error: true });
   }
 };

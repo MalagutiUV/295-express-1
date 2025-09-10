@@ -1,3 +1,5 @@
+import { UsersService } from "../services/user.service.js";
+
 export const getUsers = async (req, res) => {
   try {
     const users = await UsersService.getAll();

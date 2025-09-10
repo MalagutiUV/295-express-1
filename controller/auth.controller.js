@@ -1,3 +1,6 @@
+import { UsersService } from "../services/user.service.js";
+import jwt from "jsonwebtoken";
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -42,7 +45,7 @@ export const register = async (req, res) => {
   try {
     const user = await UsersService.insertOne(username, password, email);
 
-    res.status(200).send({ ok: true });
+    res.status(200).send({ ok: true, id: user.id });
   } catch (error) {
     res.status(500).send({ error: true });
   }

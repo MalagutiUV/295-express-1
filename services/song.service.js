@@ -13,4 +13,12 @@ export const SongService = {
     );
     return result;
   },
+
+  async getById(id) {
+    const [result] = await db.query("SELECT * FROM songs WHERE id = ?", [id]);
+    if (result.length === 0) {
+      throw new Error("Song with the id not found");
+    }
+    return result[0];
+  },
 };

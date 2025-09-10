@@ -3,13 +3,13 @@ import {
   createUser,
   getUserById,
   getUsers,
-} from "../controller/user.controller";
-import { requireAuth } from "../middleware/auth.middleware";
+} from "../controller/user.controller.js";
+import { requireAuth } from "../middleware/auth.middleware.js";
 
 const userRouter = express.Router();
 
 userRouter.use(requireAuth);
-// User Routes
+
 userRouter.get("/", getUsers);
 userRouter.get("/:id", getUserById);
 userRouter.post("/", createUser);
