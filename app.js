@@ -5,9 +5,18 @@ import { UsersService } from "./services/user.service.js";
 import { SongService } from "./services/song.service.js";
 import jwt from "jsonwebtoken";
 import env from "./config.js";
+import { requireAuth } from "./middleware/auth.middleware.js";
+
 const app = express();
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log("Middleware globally");
+  console.log("Time:", Date.now());
+  next();
+});
+
 app.use(morgan("tiny"));
 
 const accessLogStream = fs.createWriteStream("./access.log", {
@@ -47,34 +56,19 @@ app.get("/version", (req, res) => {
 });
 
 // Song Routes
-app.get("/song", async (req, res) => {
-  const authorization = req.headers.authorization;
-
-  if (!authorization) {
-    res.status(429).send({
-      message: "Token not valid",
-    });
-  }
-  if (!authorization.startsWith("Bearer")) {
-    res.status(429).send({
-      message: "Token not valid",
-    });
-  }
-
-  const splitAuthorization = authorization.split(" ");
-  const extractedToken = splitAuthorization[1];
+app.get("/song", requireAuth, async (req, res) => {
   try {
-    const verifyToken = jwt.verify(extractedToken, env.token.secret);
+    // verifyToken(req.headers.authorization);
     const songs = await SongService.getAll();
     res.send(songs);
   } catch (error) {
-    res.status(429).send({
+    res.status(401).send({
       message: "Token not valid",
     });
   }
 });
 
-app.post("/song", async (req, res) => {
+app.post("/song", requireAuth, async (req, res) => {
   const { title, artist } = req.body;
 
   if (!title || !artist) {
@@ -91,13 +85,17 @@ app.post("/song", async (req, res) => {
   });
 });
 
+app.get("/song/:id", requireAuth, async (req, res) => {
+  console.log("Im authenticated!");
+});
+
 // User Routes
-app.get("/users", async (req, res) => {
+app.get("/users", requireAuth, async (req, res) => {
   const users = await UsersService.getAll();
   res.send(users);
 });
 
-app.get("/users/:id", async (req, res) => {
+app.get("/users/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
   try {
     const user = await UsersService.get(id);
@@ -109,7 +107,7 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-app.post("/users", async (req, res) => {
+app.post("/users", requireAuth, async (req, res) => {
   const { username, password, email } = req.body;
 
   if (!username || !password || !email) {
@@ -159,7 +157,7 @@ app.post("/auth/login", async (req, res) => {
   const userExist = await UsersService.checkUser(email, password);
 
   if (!userExist) {
-    return res.status(429).send({
+    return res.status(401).send({
       message: "User Credentials not correct",
     });
   }
