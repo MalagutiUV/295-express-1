@@ -5,7 +5,7 @@ import fs from 'fs';
 import songRouter from './routes/song.routes.js';
 import userRouter from './routes/user.routes.js';
 import authRouter from './routes/auth.routes.js';
-
+import { setupSwagger } from './config/swagger.js';
 const app = express();
 
 app.use(express.json());
@@ -14,6 +14,8 @@ const accessLogStream = fs.createWriteStream('./access.log', {
   flags: 'a',
 });
 app.use(morgan('combined', { stream: accessLogStream }));
+
+setupSwagger(app);
 
 app.use('/song', songRouter);
 app.use('/auth', authRouter);
