@@ -1,13 +1,13 @@
-import { UsersService } from "../services/user.service.js";
-import jwt from "jsonwebtoken";
-import env from "../config.js";
+import { UsersService } from '../services/user.service.js';
+import jwt from 'jsonwebtoken';
+import env from '../config/config.js';
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).send({
-      message: "Missing required fields: {email, password}",
+      message: 'Missing required fields: {email, password}',
     });
   }
 
@@ -15,7 +15,7 @@ export const login = async (req, res) => {
 
   if (!userExist) {
     return res.status(401).send({
-      message: "User Credentials not correct",
+      message: 'User Credentials not correct',
     });
   }
 
@@ -39,7 +39,7 @@ export const register = async (req, res) => {
 
   if (!username || !password || !email) {
     return res.status(400).send({
-      message: "Missing required fields: {username, password, email}",
+      message: 'Missing required fields: {username, password, email}',
     });
   }
 
@@ -48,6 +48,7 @@ export const register = async (req, res) => {
 
     res.status(200).send({ ok: true, id: user.id });
   } catch (error) {
+    console.error('Error registering user:', error);
     res.status(500).send({ error: true });
   }
 };
