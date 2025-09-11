@@ -6,6 +6,10 @@ const connection = mysql.createPool({
   user: env.db.user,
   password: env.db.password,
   database: env.db.dbName,
+  port: 3306,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export default connection;
